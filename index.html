@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donor - Donation App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to Donor</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#donate">Donate</a></li>
+      <li><a href="#organizations">Organizations</a></li>
+    </ul>
+  </nav>
+
+  <section id="home">
+    <h2>Home</h2>
+    <p>Welcome to the Donor app where you can donate items easily!</p>
+  </section>
+
+  <section id="donate">
+    <h2>Donate</h2>
+    <form id="donation-form">
+      <label for="item">Item Description</label>
+      <input type="text" id="item" placeholder="Describe the item you're donating" required>
+      <button type="submit">Donate Item</button>
+    </form>
+  </section>
+
+  <section id="organizations">
+    <h2>Organizations</h2>
+    <p>List of organizations that accept donations.</p>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
