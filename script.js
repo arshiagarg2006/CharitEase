@@ -1,7 +1,11 @@
-document.getElementById("donation-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const itemDescription = document.getElementById("item").value;
-    alert(`Thank you for donating: ${itemDescription}`);
-    document.getElementById("item").value = "";  // Clear the input field
+// script.js
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('The Donor App is running!');
+
+  const donateButtons = document.querySelectorAll('.btn-secondary');
+  donateButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      alert('Thank you for your donation!');
+    });
   });
-  
+});

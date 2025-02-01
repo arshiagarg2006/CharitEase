@@ -3,39 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donor - Donation App</title>
+  <title>CharitEase</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- Header Section (with Register/Login Button) -->
   <header>
-    <h1>Welcome to Donor</h1>
+    <nav>
+      <div class="logo">
+        <h1>CharitEase</h1>
+      </div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#donate">Donate</a>
+        <a href="#login" class="btn-primary">Login</a>
+      </div>
+    </nav>
   </header>
-  <nav>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#donate">Donate</a></li>
-      <li><a href="#organizations">Organizations</a></li>
-    </ul>
-  </nav>
 
-  <section id="home">
-    <h2>Home</h2>
-    <p>Welcome to the Donor app where you can donate items easily!</p>
+  <!-- Hero Section (Centered and More Appealing) -->
+  <section id="hero" class="hero">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <h2>Join CharitEase and Make a Difference!</h2>
+        <p>Your donations can change lives. Help us help those in need.</p>
+        <a href="#donate" class="btn-secondary">Donate Now</a>
+      </div>
+    </div>
   </section>
 
-  <section id="donate">
-    <h2>Donate</h2>
-    <form id="donation-form">
-      <label for="item">Item Description</label>
-      <input type="text" id="item" placeholder="Describe the item you're donating" required>
-      <button type="submit">Donate Item</button>
-    </form>
+  <!-- Featured Causes Section -->
+  <section id="causes" class="causes">
+    <h2>Our Featured Causes</h2>
+    <div class="cause-cards">
+      <div class="cause-card">
+        <img src="images/clothing.jpg" alt="Cause Image 1">
+        <h3>Help Homeless Families</h3>
+        <p>Provide food, shelter, and support to homeless families.</p>
+        <a href="#" class="btn-secondary">Donate Now</a>
+      </div>
+      <div class="cause-card">
+        <img src="images/books.jpg" alt="Cause Image 2">
+        <h3>Feed the Hungry</h3>
+        <p>Provide nutritious meals to those in need.</p>
+        <a href="#" class="btn-secondary">Donate Now</a>
+      </div>
+      <div class="cause-card">
+        <img src="images/heart.jpg" alt="Cause Image 3">
+        <h3>Support Education</h3>
+        <p>Help fund educational resources for underprivileged children.</p>
+        <a href="#" class="btn-secondary">Donate Now</a>
+      </div>
+    </div>
   </section>
 
-  <section id="organizations">
-    <h2>Organizations</h2>
-    <p>List of organizations that accept donations.</p>
-  </section>
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 CharitEase. All rights reserved.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
