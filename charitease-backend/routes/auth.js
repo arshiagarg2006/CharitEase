@@ -18,9 +18,9 @@ router.post('/register', async (req, res) => {
             categories 
         } = req.body;
 
-        console.log('Received registration data:', { 
-            email, user_type, org_name, categories 
-        }); // Debug log
+        console.log('1. Registration data received:', { 
+            email, user_type, org_name, categories, description, address, phone 
+        });
         
         const client = await pool.connect();
         try {
@@ -34,36 +34,49 @@ router.post('/register', async (req, res) => {
             );
             
             const userId = userResult.rows[0].user_id;
-            console.log('Created user with ID:', userId); // Debug log
+            console.log('2. User created with ID:', userId);
             
             // If organization, create org record and add categories
             if (user_type === 'organization') {
+                console.log('3. Creating organization record');
+                
                 // Create organization
-                const orgResult = await client.query(
-                    `INSERT INTO organizations 
+                const orgQuery = `
+                    INSERT INTO organizations 
                     (name, description, address, phone, email) 
                     VALUES ($1, $2, $3, $4, $5) 
-                    RETURNING org_id`,
-                    [org_name || full_name, description, address, phone, email]
-                );
+                    RETURNING org_id
+                `;
                 
+                const orgValues = [
+                    org_name || full_name,
+                    description,
+                    address,
+                    phone,
+                    email
+                ];
+
+                console.log('4. Organization query:', { query: orgQuery, values: orgValues });
+                
+                const orgResult = await client.query(orgQuery, orgValues);
                 const orgId = orgResult.rows[0].org_id;
-                console.log('Created organization with ID:', orgId); // Debug log
+                console.log('5. Organization created with ID:', orgId);
                 
                 // Add categories
                 if (categories && categories.length > 0) {
+                    console.log('6. Adding categories:', categories);
                     for (let categoryId of categories) {
                         await client.query(
                             'INSERT INTO organization_categories (org_id, category_id) VALUES ($1, $2)',
                             [orgId, categoryId]
                         );
-                        console.log('Added category:', categoryId, 'to org:', orgId); // Debug log
                     }
+                    console.log('7. Categories added successfully');
                 }
             }
             
             await client.query('COMMIT');
-            console.log('Transaction committed successfully'); // Debug log
+            console.log('8. Transaction committed successfully');
             
             // Generate token
             const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -77,7 +90,7 @@ router.post('/register', async (req, res) => {
             client.release();
         }
     } catch (err) {
-        console.error('Registration error:', err);
+        console.error('Final registration error:', err);
         res.status(500).json({ error: err.message });
     }
 });

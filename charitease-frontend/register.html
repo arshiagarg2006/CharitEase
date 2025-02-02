@@ -150,13 +150,12 @@
             });
             formData.categories = selectedCategories;
 
-            console.log('Sending organization data:', formData);
+            console.log('Complete organization data:', formData); // Detailed log
         } else {
             formData.full_name = document.getElementById('fullName').value;
         }
 
         try {
-            console.log('Sending request with data:', formData); // Debug log
             const response = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: {
@@ -166,7 +165,7 @@
             });
 
             const data = await response.json();
-            console.log('Registration response:', data); // Debug log
+            console.log('Server response:', data); // Log server response
             
             if (response.ok) {
                 localStorage.setItem('token', data.token);
