@@ -5,7 +5,11 @@ const pool = require('../db');
 router.get('/', async (req, res) => {
     try {
         const organizations = await pool.query(
-            'SELECT * FROM organizations ORDER BY name'
+            `SELECT o.*, array_agg(c.name) as categories
+             FROM organizations o
+             LEFT JOIN organization_categories oc ON o.org_id = oc.org_id
+             LEFT JOIN categories c ON oc.category_id = c.category_id
+             GROUP BY o.org_id`
         );
         res.json(organizations.rows);
     } catch (err) {
@@ -32,17 +36,40 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Create organization
+// Create organization with categories
 router.post('/', async (req, res) => {
     try {
-        const { name, description, address, phone, email } = req.body;
+        const { name, description, address, phone, email, categories } = req.body;
         
-        const newOrg = await pool.query(
-            'INSERT INTO organizations (name, description, address, phone, email) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [name, description, address, phone, email]
-        );
-        
-        res.status(201).json(newOrg.rows[0]);
+        // Start transaction
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            
+            // Create organization
+            const orgResult = await client.query(
+                'INSERT INTO organizations (name, description, address, phone, email) VALUES ($1, $2, $3, $4, $5) RETURNING org_id',
+                [name, description, address, phone, email]
+            );
+            
+            const orgId = orgResult.rows[0].org_id;
+            
+            // Add categories
+            for (let categoryId of categories) {
+                await client.query(
+                    'INSERT INTO organization_categories (org_id, category_id) VALUES ($1, $2)',
+                    [orgId, categoryId]
+                );
+            }
+            
+            await client.query('COMMIT');
+            res.status(201).json({ message: 'Organization created successfully', org_id: orgId });
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -100,6 +127,23 @@ router.get('/:id/donations', async (req, res) => {
         );
         
         res.json(donations.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get organizations by category
+router.get('/by-category/:categoryId', async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        const organizations = await pool.query(
+            `SELECT o.* 
+             FROM organizations o
+             JOIN organization_categories oc ON o.org_id = oc.org_id
+             WHERE oc.category_id = $1`,
+            [categoryId]
+        );
+        res.json(organizations.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -23,18 +23,19 @@
   <section class="donation-container">
     <div class="donation-options">
       <h2>Select Donation Type</h2>
-      <label><input type="radio" name="donation-type" value="clothes"> Clothes</label>
-      <label><input type="radio" name="donation-type" value="books"> Books</label>
-      <label><input type="radio" name="donation-type" value="toys"> Toys</label>
-      <label><input type="radio" name="donation-type" value="food"> Food</label>
-      <label><input type="radio" name="donation-type" value="blood"> Blood</label>
+      <select id="categorySelect">
+        <option value="">Select a category</option>
+        <option value="1">Clothes</option>
+        <option value="2">Books</option>
+        <option value="3">Toys</option>
+        <option value="4">Food</option>
+        <option value="5">Blood</option>
+      </select>
     </div>
 
     <div class="organization-list">
       <h2>Available Organizations</h2>
-      <div class="organizations">
-        <p>Select a donation type to see organizations.</p>
-      </div>
+      <div id="organizationsContainer"></div>
     </div>
   </section>
 
@@ -66,6 +67,54 @@
     </div>
   </section>
 
-  <script src="donate.js"></script>
+  <script>
+  // Load all organizations initially
+  async function loadOrganizations() {
+    try {
+      const response = await fetch('http://localhost:5000/api/organizations');
+      const organizations = await response.json();
+      displayOrganizations(organizations);
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }
+
+  // Filter organizations by category
+  async function filterOrganizations(categoryId) {
+    try {
+      const url = categoryId 
+        ? `http://localhost:5000/api/organizations/by-category/${categoryId}`
+        : 'http://localhost:5000/api/organizations';
+      
+      const response = await fetch(url);
+      const organizations = await response.json();
+      displayOrganizations(organizations);
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }
+
+  // Display organizations in the container
+  function displayOrganizations(organizations) {
+    const container = document.getElementById('organizationsContainer');
+    container.innerHTML = organizations.map(org => `
+      <div class="organization-card">
+        <h3>${org.name}</h3>
+        <p>${org.description}</p>
+        <p>Categories: ${org.categories.join(', ')}</p>
+        <button onclick="selectOrganization(${org.org_id})">Select</button>
+      </div>
+    `).join('');
+  }
+
+  // Handle category selection
+  document.getElementById('categorySelect').addEventListener('change', (e) => {
+    const categoryId = e.target.value;
+    filterOrganizations(categoryId);
+  });
+
+  // Load organizations when page loads
+  document.addEventListener('DOMContentLoaded', loadOrganizations);
+  </script>
 </body>
 </html>
