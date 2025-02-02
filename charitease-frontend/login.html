@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - CharitEase</title>
+  <link rel="stylesheet" href="login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <h1>CharitEase</h1>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate</a>
+        <a href="login.html" class="btn-primary">Login</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Centered Login Form -->
+  <section id="login" class="login-section">
+    <div class="login-form-container">
+      <h2>Login to CharitEase</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn-primary">Login</button>
+      </form>
+      <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 CharitEase. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+          const response = await fetch('http://localhost:5000/api/auth/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+          
+          if (response.ok) {
+              // Store the token and user info
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('userId', data.userId);
+              alert('Login successful!');
+              window.location.href = 'organizations.html';
+          } else {
+              alert(data.error || 'Login failed. Please check your credentials.');
+          }
+      } catch (err) {
+          alert('Error connecting to server. Please try again later.');
+      }
+  });
+  </script>
+</body>
+</html>

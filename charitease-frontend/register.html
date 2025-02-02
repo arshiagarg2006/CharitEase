@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CharitEase</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>CharitEase</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="donate.html">Donate</a>
+                <a href="login.html">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <section id="register" class="login-section">
+        <div class="login-form-container">
+            <h2>Create an Account</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="input-group">
+                    <label for="userType">I am a:</label>
+                    <select id="userType" name="userType" required>
+                        <option value="donor">Donor</option>
+                        <option value="organization">Organization</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 CharitEase. All rights reserved.</p>
+    </footer>
+
+    <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+            full_name: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            user_type: document.getElementById('userType').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Store the token and user info
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.userId);
+                alert('Registration successful!');
+                window.location.href = 'organizations.html';
+            } else {
+                alert(data.error || 'Registration failed. Please try again.');
+            }
+        } catch (err) {
+            alert('Error connecting to server. Please try again later.');
+        }
+    });
+    </script>
+</body>
+</html> 
