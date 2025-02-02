@@ -10,6 +10,10 @@
     background-color: #f4f4f4;
     color: #333;
     line-height: 1.6;
+    background-image: url('images/hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* This keeps the image fixed while scrolling */
   }
   
   /* Header Styling */
@@ -50,37 +54,34 @@
   
   /* Hero Section Styling */
   .hero {
-    background: url('images/hero-background.jpg') no-repeat center center;
-    background-size: cover;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 600px;
     position: relative;
   }
   
   .hero-overlay {
-    background: rgba(0, 0, 0, 0.6); /* Dark overlay for better text contrast */
-    color: white;
-    text-align: center;
-    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.8); /* This makes the content box slightly transparent */
+    padding: 40px;
     border-radius: 10px;
-    width: 80%;
-    max-width: 800px;
-    backdrop-filter: blur(10px); /* Blurring the background for a sleek effect */
+    margin: 20px;
+  }
+  
+  .hero-content {
+    text-align: center;
+  }
+  
+  .hero h2, .hero p {
+    color: #333; /* Dark text color */
   }
   
   .hero h2 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: #ffffff;
   }
   
   .hero p {
     font-size: 1.6rem;
     margin-bottom: 2rem;
-    color: #ffffff;
   }
   
   .btn-secondary {
