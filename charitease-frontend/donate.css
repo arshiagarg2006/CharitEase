@@ -1,84 +1,189 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-body {
-  font-family: 'Poppins', sans-serif;
+/* General reset for consistency */
+* {
   margin: 0;
   padding: 0;
-  background-color: #eaf2f8;
+  box-sizing: border-box;
 }
 
+/* Body styling */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header styling */
 header {
-  background-color: #2c3e50;
-  padding: 15px 30px;
+  background-color: #003366;
+  padding: 1rem 2rem;
+}
+
+header nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.nav-links a {
-  color: #fff;
+header .logo h1 {
+  font-size: 1.8rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Navigation links */
+header .nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-left: auto; /* Aligns buttons to the right */
+}
+
+header .nav-links a {
   text-decoration: none;
-  font-weight: 500;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
-.donate-section {
+header .nav-links a:hover {
+  color: #ffb86c;
+}
+
+header .nav-links a.btn-primary {
+  background-color: #ff7f50;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header .nav-links a.btn-primary:hover {
+  background-color: #ff6347;
+}
+
+/* Donation Section */
+.donation-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 20px;
+}
+
+.donation-options, .organization-list {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 45%;
+}
+
+.donation-options h2, .organization-list h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.donation-options label {
+  display: block;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.donation-options input[type="radio"] {
+  margin-right: 10px;
+}
+
+.organization-list .organizations {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #777;
+}
+
+/* Donation Schedule Section */
+.donation-schedule {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 30px 20px;
   text-align: center;
-  padding: 50px;
-}
-
-.cause-cards {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 30px;
 }
 
-.cause-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.donation-schedule .address-container {
+  flex: 1;
+  text-align: left;
 }
 
-.cause-card img {
+.donation-schedule .address-container input {
   width: 100%;
-  border-radius: 8px;
-}
-
-.btn-secondary {
-  background-color: #27ae60;
-  color: white;
-  padding: 10px;
+  padding: 12px;
+  font-size: 16px;
   border-radius: 5px;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
-.donation-form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+.donation-schedule h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
 }
 
-.input-group {
+.donation-schedule .schedule-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.donation-schedule select, .donation-schedule input[type="date"] {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.donation-schedule .btn-confirm {
+  background-color: #003366;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.donation-schedule .btn-confirm:hover {
+  background-color: #002244;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .donation-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .donation-options, .organization-list {
+    width: 80%;
     margin-bottom: 20px;
-}
+  }
 
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-}
+  .donation-schedule {
+    width: 80%;
+    flex-direction: column;
+  }
 
-.input-group input,
-.input-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
+  header nav {
+    flex-direction: column;
+    align-items: center;
+  }
 
-.input-group textarea {
-    height: 100px;
+  header .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

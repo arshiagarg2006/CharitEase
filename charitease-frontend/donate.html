@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donate - CharitEase</title>
+  <title>CharitEase - Donate</title>
   <link rel="stylesheet" href="donate.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <header>
     <nav>
       <div class="logo">
@@ -16,77 +14,58 @@
       </div>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="about.html">About</a>
+        <a href="organizations.html">Organizations</a>
         <a href="login.html" class="btn-primary">Login</a>
       </div>
     </nav>
   </header>
 
-  <!-- Centered Donation Section -->
-  <section id="donate" class="donate-section">
-    <h2>Make a Donation</h2>
-    <div class="donation-form-container">
-        <form id="donationForm">
-            <div class="input-group">
-                <label for="itemDescription">Item Description</label>
-                <textarea id="itemDescription" required></textarea>
-            </div>
-            <div class="input-group">
-                <label for="pickupAddress">Pickup Address</label>
-                <input type="text" id="pickupAddress" required>
-            </div>
-            <div class="input-group">
-                <label for="pickupTime">Preferred Pickup Time</label>
-                <input type="datetime-local" id="pickupTime" required>
-            </div>
-            <button type="submit" class="btn-primary">Schedule Donation</button>
-        </form>
+  <section class="donation-container">
+    <div class="donation-options">
+      <h2>Select Donation Type</h2>
+      <label><input type="radio" name="donation-type" value="clothes"> Clothes</label>
+      <label><input type="radio" name="donation-type" value="books"> Books</label>
+      <label><input type="radio" name="donation-type" value="toys"> Toys</label>
+      <label><input type="radio" name="donation-type" value="food"> Food</label>
+      <label><input type="radio" name="donation-type" value="blood"> Blood</label>
+    </div>
+
+    <div class="organization-list">
+      <h2>Available Organizations</h2>
+      <div class="organizations">
+        <p>Select a donation type to see organizations.</p>
+      </div>
     </div>
   </section>
 
-  <footer>
-    <p>&copy; 2025 CharitEase. All rights reserved.</p>
-  </footer>
+  <section class="donation-schedule">
+    <div class="address-container">
+      <h2>Enter Your Address for Pickup</h2>
+      <input type="text" placeholder="Enter your address" id="address">
+    </div>
+    
+    <div class="schedule-container">
+      <h2>Schedule Your Donation</h2>
+      <input type="date" id="pickup-date">
+      <select id="time-slot">
+        <option value="8:00 AM">8:00 AM</option>
+        <option value="9:00 AM">9:00 AM</option>
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="12:00 PM">12:00 PM</option>
+        <option value="1:00 PM">1:00 PM</option>
+        <option value="2:00 PM">2:00 PM</option>
+        <option value="3:00 PM">3:00 PM</option>
+        <option value="4:00 PM">4:00 PM</option>
+        <option value="5:00 PM">5:00 PM</option>
+        <option value="6:00 PM">6:00 PM</option>
+        <option value="7:00 PM">7:00 PM</option>
+        <option value="8:00 PM">8:00 PM</option>
+      </select>
+      <button class="btn-confirm">Confirm & Submit Donation</button>
+    </div>
+  </section>
 
-  <script src="script.js"></script>
-  <script>
-  // Get organization ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const orgId = urlParams.get('orgId');
-
-  document.getElementById('donationForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const formData = {
-          org_id: orgId,
-          donor_id: localStorage.getItem('userId'), // You'll need to store this during login
-          item_description: document.getElementById('itemDescription').value,
-          pickup_address: document.getElementById('pickupAddress').value,
-          pickup_time: document.getElementById('pickupTime').value
-      };
-
-      try {
-          const response = await fetch('http://localhost:5000/api/donations', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify(formData)
-          });
-
-          const data = await response.json();
-          
-          if (response.ok) {
-              alert('Donation scheduled successfully!');
-              window.location.href = 'organizations.html';
-          } else {
-              alert(data.error);
-          }
-      } catch (err) {
-          alert('Error submitting donation');
-      }
-  });
-  </script>
+  <script src="donate.js"></script>
 </body>
 </html>
