@@ -105,6 +105,24 @@ header .nav-links a.btn-primary:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 30px 20px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.donation-schedule .address-container {
+  flex: 1;
+  text-align: left;
+}
+
+.donation-schedule .address-container input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
 .donation-schedule h2 {
@@ -112,13 +130,19 @@ header .nav-links a.btn-primary:hover {
   font-size: 22px;
 }
 
-.donation-schedule select {
+.donation-schedule .schedule-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.donation-schedule select, .donation-schedule input[type="date"] {
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
   width: 200px;
-  margin: 10px 0;
 }
 
 .donation-schedule .btn-confirm {
@@ -150,6 +174,7 @@ header .nav-links a.btn-primary:hover {
 
   .donation-schedule {
     width: 80%;
+    flex-direction: column;
   }
 
   header nav {

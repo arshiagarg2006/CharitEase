@@ -39,23 +39,31 @@
   </section>
 
   <section class="donation-schedule">
-    <h2>Schedule Your Donation</h2>
-    <select id="time-slot">
-      <option value="8:00 AM">8:00 AM</option>
-      <option value="9:00 AM">9:00 AM</option>
-      <option value="10:00 AM">10:00 AM</option>
-      <option value="11:00 AM">11:00 AM</option>
-      <option value="12:00 PM">12:00 PM</option>
-      <option value="1:00 PM">1:00 PM</option>
-      <option value="2:00 PM">2:00 PM</option>
-      <option value="3:00 PM">3:00 PM</option>
-      <option value="4:00 PM">4:00 PM</option>
-      <option value="5:00 PM">5:00 PM</option>
-      <option value="6:00 PM">6:00 PM</option>
-      <option value="7:00 PM">7:00 PM</option>
-      <option value="8:00 PM">8:00 PM</option>
-    </select>
-    <button class="btn-confirm">Confirm & Submit Donation</button>
+    <div class="address-container">
+      <h2>Enter Your Address for Pickup</h2>
+      <input type="text" placeholder="Enter your address" id="address">
+    </div>
+    
+    <div class="schedule-container">
+      <h2>Schedule Your Donation</h2>
+      <input type="date" id="pickup-date">
+      <select id="time-slot">
+        <option value="8:00 AM">8:00 AM</option>
+        <option value="9:00 AM">9:00 AM</option>
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="12:00 PM">12:00 PM</option>
+        <option value="1:00 PM">1:00 PM</option>
+        <option value="2:00 PM">2:00 PM</option>
+        <option value="3:00 PM">3:00 PM</option>
+        <option value="4:00 PM">4:00 PM</option>
+        <option value="5:00 PM">5:00 PM</option>
+        <option value="6:00 PM">6:00 PM</option>
+        <option value="7:00 PM">7:00 PM</option>
+        <option value="8:00 PM">8:00 PM</option>
+      </select>
+      <button class="btn-confirm">Confirm & Submit Donation</button>
+    </div>
   </section>
 
   <script src="donate.js"></script>
