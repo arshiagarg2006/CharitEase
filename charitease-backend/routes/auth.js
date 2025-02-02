@@ -6,22 +6,52 @@ const pool = require('../db'); // We'll create this next
 // Register
 router.post('/register', async (req, res) => {
     try {
-        const { email, password, full_name, user_type } = req.body;
+        const { email, password, full_name, user_type, categories } = req.body;
         
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        
-        // Insert user
-        const newUser = await pool.query(
-            'INSERT INTO users (email, password, full_name, user_type) VALUES ($1, $2, $3, $4) RETURNING *',
-            [email, hashedPassword, full_name, user_type]
-        );
-        
-        // Create token
-        const token = jwt.sign({ id: newUser.rows[0].user_id }, process.env.JWT_SECRET);
-        
-        res.json({ token });
+        // Start transaction
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            
+            // Create user
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const userResult = await client.query(
+                'INSERT INTO users (email, password, full_name, user_type) VALUES ($1, $2, $3, $4) RETURNING user_id',
+                [email, hashedPassword, full_name, user_type]
+            );
+            
+            const userId = userResult.rows[0].user_id;
+            
+            // If organization, create org record and add categories
+            if (user_type === 'organization') {
+                const orgResult = await client.query(
+                    'INSERT INTO organizations (name, email) VALUES ($1, $2) RETURNING org_id',
+                    [full_name, email]
+                );
+                
+                const orgId = orgResult.rows[0].org_id;
+                
+                // Add categories
+                for (let categoryId of categories) {
+                    await client.query(
+                        'INSERT INTO organization_categories (org_id, category_id) VALUES ($1, $2)',
+                        [orgId, categoryId]
+                    );
+                }
+            }
+            
+            await client.query('COMMIT');
+            
+            // Generate token
+            const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            
+            res.status(201).json({ token, userId });
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

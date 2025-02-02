@@ -1,18 +1,35 @@
 const router = require('express').Router();
 const pool = require('../db');
 
-// Get all organizations
+// Get all organizations with their categories
 router.get('/', async (req, res) => {
     try {
-        const organizations = await pool.query(
-            `SELECT o.*, array_agg(c.name) as categories
-             FROM organizations o
-             LEFT JOIN organization_categories oc ON o.org_id = oc.org_id
-             LEFT JOIN categories c ON oc.category_id = c.category_id
-             GROUP BY o.org_id`
-        );
-        res.json(organizations.rows);
+        const organizations = await pool.query(`
+            SELECT 
+                o.*,
+                ARRAY_AGG(oc.category_id) as categories,
+                ARRAY_AGG(c.name) as category_names
+            FROM organizations o
+            LEFT JOIN organization_categories oc ON o.org_id = oc.org_id
+            LEFT JOIN categories c ON oc.category_id = c.category_id
+            GROUP BY o.org_id
+        `);
+
+        // Format the response
+        const formattedOrgs = organizations.rows.map(org => ({
+            org_id: org.org_id,
+            name: org.name,
+            description: org.description,
+            address: org.address,
+            phone: org.phone,
+            email: org.email,
+            categories: org.categories.filter(cat => cat !== null), // Remove null values
+            category_names: org.category_names.filter(name => name !== null) // Remove null values
+        }));
+
+        res.json(formattedOrgs);
     } catch (err) {
+        console.error('Error fetching organizations:', err);
         res.status(500).json({ error: err.message });
     }
 });
