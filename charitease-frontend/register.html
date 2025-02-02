@@ -136,22 +136,27 @@
         };
 
         if (userType === 'organization') {
-            formData.full_name = document.getElementById('orgName').value; // for users table
-            formData.org_name = document.getElementById('orgName').value;
+            const orgName = document.getElementById('orgName').value;
+            formData.full_name = orgName;
+            formData.org_name = orgName;
             formData.description = document.getElementById('orgDescription').value;
             formData.address = document.getElementById('orgAddress').value;
             formData.phone = document.getElementById('orgPhone').value;
             
+            // Fix category selection
             const selectedCategories = [];
             document.querySelectorAll('input[name="categories"]:checked').forEach(checkbox => {
                 selectedCategories.push(parseInt(checkbox.value));
             });
             formData.categories = selectedCategories;
+
+            console.log('Sending organization data:', formData);
         } else {
             formData.full_name = document.getElementById('fullName').value;
         }
 
         try {
+            console.log('Sending request with data:', formData); // Debug log
             const response = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: {
@@ -161,6 +166,7 @@
             });
 
             const data = await response.json();
+            console.log('Registration response:', data); // Debug log
             
             if (response.ok) {
                 localStorage.setItem('token', data.token);
@@ -171,6 +177,7 @@
                 alert(data.error || 'Registration failed. Please try again.');
             }
         } catch (err) {
+            console.error('Registration error:', err);
             alert('Error connecting to server. Please try again later.');
         }
     });

@@ -6,9 +6,22 @@ const pool = require('../db'); // We'll create this next
 // Register
 router.post('/register', async (req, res) => {
     try {
-        const { email, password, full_name, user_type, categories } = req.body;
+        const { 
+            email, 
+            password, 
+            user_type, 
+            full_name,
+            org_name,
+            description,
+            address,
+            phone,
+            categories 
+        } = req.body;
+
+        console.log('Received registration data:', { 
+            email, user_type, org_name, categories 
+        }); // Debug log
         
-        // Start transaction
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
@@ -21,26 +34,36 @@ router.post('/register', async (req, res) => {
             );
             
             const userId = userResult.rows[0].user_id;
+            console.log('Created user with ID:', userId); // Debug log
             
             // If organization, create org record and add categories
             if (user_type === 'organization') {
+                // Create organization
                 const orgResult = await client.query(
-                    'INSERT INTO organizations (name, email) VALUES ($1, $2) RETURNING org_id',
-                    [full_name, email]
+                    `INSERT INTO organizations 
+                    (name, description, address, phone, email) 
+                    VALUES ($1, $2, $3, $4, $5) 
+                    RETURNING org_id`,
+                    [org_name || full_name, description, address, phone, email]
                 );
                 
                 const orgId = orgResult.rows[0].org_id;
+                console.log('Created organization with ID:', orgId); // Debug log
                 
                 // Add categories
-                for (let categoryId of categories) {
-                    await client.query(
-                        'INSERT INTO organization_categories (org_id, category_id) VALUES ($1, $2)',
-                        [orgId, categoryId]
-                    );
+                if (categories && categories.length > 0) {
+                    for (let categoryId of categories) {
+                        await client.query(
+                            'INSERT INTO organization_categories (org_id, category_id) VALUES ($1, $2)',
+                            [orgId, categoryId]
+                        );
+                        console.log('Added category:', categoryId, 'to org:', orgId); // Debug log
+                    }
                 }
             }
             
             await client.query('COMMIT');
+            console.log('Transaction committed successfully'); // Debug log
             
             // Generate token
             const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -48,11 +71,13 @@ router.post('/register', async (req, res) => {
             res.status(201).json({ token, userId });
         } catch (err) {
             await client.query('ROLLBACK');
+            console.error('Registration error:', err);
             throw err;
         } finally {
             client.release();
         }
     } catch (err) {
+        console.error('Registration error:', err);
         res.status(500).json({ error: err.message });
     }
 });
